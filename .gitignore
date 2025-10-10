@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+data/*.db
+data/*.faiss
+data/*.json
+data/*.npz
+resumes/*.pdf
+.DS_Store
+app/.streamlit/
+app/.cache/
