@@ -9,3 +9,11 @@ resumes/*.pdf
 .DS_Store
 app/.streamlit/
 app/.cache/
+.venv/
+__pycache__/
+*.pyc
+data/
+resumes/*.pdf
+.DS_Store
+app/.streamlit/
+app/.cache/
