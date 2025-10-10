@@ -1,0 +1,24 @@
+# Ignore virtual environments
+.venv/
+venv/
+
+# Ignore compiled files
+__pycache__/
+*.pyc
+
+# Ignore data outputs
+data/*.faiss
+data/*.json
+data/*.npz
+data/*.db
+
+# Ignore resume files (optional, they may contain personal info)
+resumes/*.pdf
+
+# Ignore OS files
+.DS_Store
+
+# Streamlit cache
+app/__pycache__/
+app/.streamlit/
+app/.cache/
