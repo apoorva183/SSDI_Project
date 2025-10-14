@@ -1,0 +1,19 @@
+flask==3.0.0
+flask-cors==4.0.0
+pymongo==4.6.0
+python-dotenv==1.0.0
+PyMuPDF==1.23.8
+python-multipart==0.0.6
+werkzeug==3.0.1
+openai==1.50.2
+pydantic==2.5.0
+pydantic-ai==0.0.13
+dateutil==2.8.2
+# Removed problematic packages that require C compilation:
+# pdfplumber (requires compilation on Windows)
+# spacy (requires compilation and is heavy)
+# nltk (not essential for basic functionality)
+# PyPDF2 (replaced with PyMuPDF for better text extraction)
+# 
+# Note: gridfs is included in pymongo package
+# bson is also included in pymongo package
