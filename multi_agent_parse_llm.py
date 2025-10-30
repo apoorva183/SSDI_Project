@@ -19,7 +19,7 @@ if not os.getenv("OPENAI_API_KEY"):
 # -------------------------
 # Schemas
 # -------------------------
-AcademicLevel = Literal["freshman","sophomore","junior","senior","graduate","PhD"]
+AcademicLevel = Literal["undergraduate","graduate","PhD"]
 CourseStatus  = Literal["In Progress","Completed"]
 JobStatus     = Literal["Past","Current Job"]
 LangProf      = Literal["Native","Beginner","Intermediate","Fluent"]
@@ -31,11 +31,6 @@ class ProfileInfo(BaseModel):
     academic_level: Optional[AcademicLevel] = None
     program: Optional[str] = Field(None, description="e.g., Bachelor of Arts, Master of Sciences")
     major: Optional[str]  = Field(None, description="e.g., Computer Science, Cybersecurity")
-
-class CourseworkItem(BaseModel):
-    course_code: Optional[str] = Field(None, description="e.g., ITCS 6112")
-    course_title: str
-    course_status: CourseStatus
 
 class ExperienceItem(BaseModel):
     title: str
@@ -70,7 +65,6 @@ class SoftSkillsModel(BaseModel):
 
 class ResumeModel(BaseModel):
     profile_information: ProfileInfo
-    coursework: List[CourseworkItem] = []
     past_academic_profile_text: Optional[str] = None
     professional_experience: List[ExperienceItem] = []
     projects: List[ProjectItem] = []
@@ -84,8 +78,22 @@ class ProfileInfoModel(BaseModel):
     profile_information: ProfileInfo
 
 class CourseworkModel(BaseModel):
-    coursework: List[CourseworkItem] = []
-    past_academic_profile_text: Optional[str] = None
+    past_academic_profile_text: Optional[str] = Field(
+        None,
+        description="Summary of all academic history prior to the current program"
+    )
+    previous_degrees: List[str] = Field(
+        default_factory=list,
+        description="List of previously completed degrees (e.g., 'Bachelor of Science in Biology, 2020')"
+    )
+    previous_institutions: List[str] = Field(
+        default_factory=list,
+        description="List of previously attended educational institutions"
+    )
+    graduation_years: List[int] = Field(
+        default_factory=list,
+        description="Graduation years for previous degrees"
+    )
 
 class ExperienceModel(BaseModel):
     professional_experience: List[ExperienceItem] = []
@@ -113,33 +121,53 @@ Extract ONLY the current academic profile (UNC Charlotte focus if present):
 - academic_level (freshman/sophomore/junior/senior/graduate/PhD)
 - program (e.g., Bachelor Of Arts, Master of Sciences)
 - major (e.g., Computer Science)
-If missing, leave null. Return ProfileInfoModel only.
+IMPORTANT: Extract ONLY if the information is explicitly present in the resume. If any field is missing or unclear, leave it null. Do NOT guess, infer, or invent any details. Return ProfileInfoModel only.
 """
 
-P_COURSEWORK = """
-Extract coursework:
-- For each course: {course_code?, course_title, course_status in {"In Progress","Completed"}}
-- Also produce a free-text 'past_academic_profile_text' summarizing prior degrees/schools before current program.
-Return CourseworkModel only.
+P_PAST_COURSEWORK = """
+Extract all academic history that occurred BEFORE the current program (current program is in year 2025):
+
+- Include previous degrees earned (with completion years if available)
+- Include previous institutions attended
+- Include previous majors/minors
+- Include relevant coursework from past programs
+- Include academic honors or achievements from past education
+- Include high school information if present
+
+EXCLUDE:
+- The current program (any program with graduation year 2025 or later)
+- Any coursework or degree marked as 'in progress', 'present', or ending in 2025 or later
+
+IMPORTANT: Only extract information that is explicitly stated in the resume. If a detail is not present, leave it empty or null. Do NOT guess, infer, or invent any information.
+
+Return CourseworkModel with:
+1. 'past_academic_profile_text': A comprehensive text summary of all past academic history
+2. 'previous_degrees': Array of degree strings (e.g., ["Bachelor of Arts in Psychology, University of XYZ, 2018"])
+3. 'previous_institutions': Array of institution names
+4. 'graduation_years': Array of years for previous degrees
+
+If no past academic history is found, return empty/null values.
 """
 
 P_EXPERIENCE = """
 Extract professional experience items:
 - title, company, startDate, endDate ("Present" allowed), status in {"Past","Current Job"}, jobDescription.
-Return ExperienceModel only.
+IMPORTANT: Only extract information that is explicitly present in the resume. If any field is missing or unclear, leave it null. Do NOT guess, infer, or invent any details. Return ExperienceModel only.
 """
 
 P_PROJECTS = """
-Extract projects with {projectTitle, projectDescription}. Return ProjectsModel only.
+Extract projects with {projectTitle, projectDescription}. 
+IMPORTANT: Only extract projects that are explicitly mentioned in the resume. If a project or its description is missing, leave it null. Do NOT guess, infer, or invent any information. Return ProjectsModel only.
 """
 
 P_LANGS = """
-Extract spoken languages with proficiency in {"Native","Beginner","Intermediate","Fluent"}; default to "Fluent".
-Return LanguagesModel only.
+Extract spoken languages with proficiency in {"Native","Beginner","Intermediate","Fluent"}; default to "Fluent" ONLY if proficiency is explicitly not stated but language is present.
+IMPORTANT: Only extract languages that are explicitly mentioned in the resume. If a language or its proficiency is missing, leave it null. Do NOT guess, infer, or invent any information. Return LanguagesModel only.
 """
 
 P_CONF = """
-Extract conferences/activities: {conferenceTitle, title (attendant/volunteer/presenter/participant), year?}. Return ConferencesModel only.
+Extract conferences/activities: {conferenceTitle, title (attendant/volunteer/presenter/participant), year?}.
+IMPORTANT: Only extract conferences or activities that are explicitly mentioned in the resume. If any field is missing or unclear, leave it null. Do NOT guess, infer, or invent any information. Return ConferencesModel only.
 """
 
 P_TECH = """
@@ -148,8 +176,10 @@ Return TechnicalSkillsModel only.
 
 Rules:
 - technical_skills: array of {skillName, skillProficiency in {"Beginner","Intermediate","Advanced"}}
-- If proficiency is not stated, default to "Intermediate".
+- If proficiency is not stated but skill is present, default to "Intermediate".
 - Do not include soft skills here.
+
+IMPORTANT: Only extract technical skills that are explicitly mentioned in the resume. If a skill or its proficiency is missing, leave it null or use the default as above. Do NOT guess, infer, or invent any information.
 """
 
 P_SOFT = """
@@ -157,13 +187,15 @@ Extract ONLY soft skills (no proficiency). Return SoftSkillsModel only.
 Examples of soft skills: Communication, Teamwork, Leadership, Problem-Solving,
 Time Management, Adaptability, Collaboration, Critical Thinking, Mentorship.
 Output should be an array of strings in 'soft_skills'.
+
+IMPORTANT: Only extract soft skills that are explicitly mentioned in the resume. If a soft skill is not present, do NOT guess, infer, or invent any information.
 """
 
 # -------------------------
 # Sub-agents (use provider-prefixed model string)
 # -------------------------
 a_profile  = Agent('openai:gpt-4o-mini', system_prompt=P_PROFILE,   output_type=ProfileInfoModel)
-a_courses  = Agent('openai:gpt-4o-mini', system_prompt=P_COURSEWORK, output_type=CourseworkModel)
+a_courses  = Agent('openai:gpt-4o-mini', system_prompt=P_PAST_COURSEWORK, output_type=CourseworkModel)
 a_exp      = Agent('openai:gpt-4o-mini', system_prompt=P_EXPERIENCE, output_type=ExperienceModel)
 a_projects = Agent('openai:gpt-4o-mini', system_prompt=P_PROJECTS,   output_type=ProjectsModel)
 a_langs    = Agent('openai:gpt-4o-mini', system_prompt=P_LANGS,      output_type=LanguagesModel)
@@ -193,7 +225,7 @@ async def extract_profile(resume_text: str) -> ProfileInfoModel:
     return result.output
 
 @Tool
-async def extract_coursework(resume_text: str) -> CourseworkModel:
+async def extract_past_coursework(resume_text: str) -> CourseworkModel:
     result = await a_courses.run(resume_text)
     return result.output
 
@@ -225,7 +257,7 @@ async def extract_techskills(resume_text: str) -> TechSkillsModel:
 controller = Agent(
     'openai:gpt-4o-mini',
     system_prompt=CTRL_PROMPT,
-    tools=[extract_profile, extract_coursework, extract_experience,
+    tools=[extract_profile, extract_experience,
            extract_projects, extract_languages, extract_conferences, extract_techskills],
     output_type=ResumeModel,
 )
@@ -242,7 +274,6 @@ def parse_resume_text_multiagent_deterministic(resume_text: str) -> ResumeModel:
 
     merged = ResumeModel(
         profile_information=prof.profile_information,
-        coursework=course.coursework,
         past_academic_profile_text=course.past_academic_profile_text,
         professional_experience=exp.professional_experience,
         projects=proj.projects,
@@ -259,7 +290,7 @@ async def parse_resume_text_multiagent(resume_text: str) -> ResumeModel:
     return res.output
 
 if __name__ == "__main__":
-    pdf_path = "uploads/Full_TestCase.pdf"
+    pdf_path = "uploads/MOCK_RESUME.pdf"
     resume_text = extract_text_from_pdf(pdf_path)
     parsed = parse_resume_text_multiagent_deterministic(resume_text)
     print(parsed.model_dump_json(indent=2))
