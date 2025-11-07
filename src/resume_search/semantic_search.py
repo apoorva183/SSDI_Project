@@ -107,6 +107,10 @@ class SemanticSearchEngine:
             )
             
             embedding = response.data[0].embedding
+            
+            # Small delay to avoid rate limits
+            time.sleep(0.2)
+            
             return embedding
             
         except Exception as e:
@@ -389,34 +393,55 @@ class SemanticSearchEngine:
                         return keyword_snippet
             
             # If not found in keyword search, get profile data directly from MongoDB
-            from src.core.database import DatabaseManager
-            db_manager = DatabaseManager()
+            from src.core.database import db_manager
             
-            # Get profile from MongoDB directly
+            # Get profile from MongoDB directly using ObjectId
+            from bson import ObjectId
             if db_manager.db is not None:
-                collection = db_manager.db['profiles']
-                profile = collection.find_one({'_id': profile_id})
+                try:
+                    profile = db_manager.db.profiles.find_one({'_id': ObjectId(profile_id)})
+                except:
+                    # If ObjectId conversion fails, try string
+                    profile = db_manager.db.profiles.find_one({'_id': profile_id})
+            else:
+                profile = None
             
             if profile:
                 content_parts = []
                 
                 # Extract relevant content for snippet
-                if profile.get('skills'):
-                    content_parts.append(f"Skills: {profile['skills'][:80]}")
-                if profile.get('experience'):
-                    content_parts.append(f"Experience: {profile['experience'][:80]}")
-                if profile.get('education'): 
-                    content_parts.append(f"Education: {profile['education'][:80]}")
-                if profile.get('projects'):
-                    content_parts.append(f"Projects: {profile['projects'][:80]}")
+                personal_info = profile.get('personal_info', {})
+                if personal_info.get('major'):
+                    content_parts.append(f"Major: {personal_info.get('major')}")
+                
+                skills = profile.get('skills', {})
+                tech_skills = skills.get('technical', [])
+                if tech_skills and isinstance(tech_skills, list):
+                    tech_str = ', '.join([str(s) for s in tech_skills[:5] if isinstance(s, str)])
+                    if tech_str:
+                        content_parts.append(f"Skills: {tech_str}")
+                
+                academic = profile.get('academic', {})
+                courses = academic.get('courses', [])
+                if courses and isinstance(courses, list):
+                    courses_str = ', '.join([str(c) for c in courses[:3] if isinstance(c, str)])
+                    if courses_str:
+                        content_parts.append(f"Courses: {courses_str}")
+                
+                interests = profile.get('interests', {})
+                academic_int = interests.get('academic', [])
+                if academic_int and isinstance(academic_int, list):
+                    int_str = ', '.join([str(i) for i in academic_int[:3] if isinstance(i, str)])
+                    if int_str:
+                        content_parts.append(f"Interests: {int_str}")
                 
                 if content_parts:
-                    return '. '.join(content_parts)[:200] + '...'
+                    return '. '.join(content_parts)[:250] + '...'
                 
                 # Fallback to basic profile info
-                name = profile.get('full_name', 'Unknown')
-                email = profile.get('email', 'No email')
-                return f"{name} ({email}) - Semantic match based on profile content"
+                name = personal_info.get('full_name', 'Unknown')
+                major = personal_info.get('major', 'Unknown Major')
+                return f"{name} - {major}"
             
             # Final fallback
             return f"Semantic match for profile {profile_id}"

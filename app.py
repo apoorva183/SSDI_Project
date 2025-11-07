@@ -38,6 +38,233 @@ CORS(app)
 
 profiles_memory_store = []
 
+# AUTO-INITIALIZE SEARCH DATABASES ON STARTUP
+if RESUME_SEARCH_AVAILABLE:
+    print("🔧 Auto-initializing search databases...")
+    try:
+        init_mongodb_search_db()
+        print("✅ Keyword search database initialized")
+    except Exception as e:
+        print(f"⚠️  Keyword search initialization failed: {e}")
+    
+    try:
+        init_semantic_search()
+        print("✅ Semantic search database initialized")
+    except Exception as e:
+        print(f"⚠️  Semantic search initialization failed: {e}")
+    
+# AUTO-INITIALIZE SEARCH DATABASES ON STARTUP
+if RESUME_SEARCH_AVAILABLE:
+    print("🔧 Auto-initializing search databases...")
+    try:
+        init_mongodb_search_db()
+        print("✅ Keyword search database initialized")
+    except Exception as e:
+        print(f"⚠️  Keyword search initialization failed: {e}")
+    
+    try:
+        init_semantic_search()
+        print("✅ Semantic search database initialized")
+    except Exception as e:
+        print(f"⚠️  Semantic search initialization failed: {e}")
+    
+    # AUTO-INDEX EXISTING PROFILES (KEYWORD ONLY - EMBEDDINGS IN BACKGROUND)
+    if DATABASE_AVAILABLE and db_manager and db_manager.db is not None:
+        try:
+            print("🔄 Indexing existing profiles for keyword search...")
+            profiles = list(db_manager.db.profiles.find({"status": "active"}))
+            indexed_count = 0
+            
+            for profile in profiles:
+                try:
+                    profile_id = str(profile.get('_id'))
+                    email = profile.get('personal_info', {}).get('email', '')
+                    full_name = profile.get('personal_info', {}).get('full_name', '')
+                    
+                    # Build searchable content from profile
+                    content_parts = []
+                    
+                    # Add personal info
+                    if full_name:
+                        content_parts.append(f"Name: {full_name}")
+                    
+                    personal_info = profile.get('personal_info', {})
+                    if personal_info.get('major'):
+                        content_parts.append(f"Major: {personal_info.get('major')}")
+                    if personal_info.get('program'):
+                        content_parts.append(f"Program: {personal_info.get('program')}")
+                    
+                    # Add academic info
+                    academic = profile.get('academic', {})
+                    courses = academic.get('courses', [])
+                    if courses and isinstance(courses, list):
+                        courses_str = ', '.join([str(c) for c in courses if isinstance(c, str)])
+                        if courses_str:
+                            content_parts.append(f"Courses: {courses_str}")
+                    
+                    certs = academic.get('certifications', [])
+                    if certs and isinstance(certs, list):
+                        certs_str = ', '.join([str(c) for c in certs if isinstance(c, str)])
+                        if certs_str:
+                            content_parts.append(f"Certifications: {certs_str}")
+                    
+                    if academic.get('past_academic_profile_text'):
+                        content_parts.append(str(academic.get('past_academic_profile_text')))
+                    
+                    # Add skills
+                    skills = profile.get('skills', {})
+                    tech_skills = skills.get('technical', [])
+                    if tech_skills and isinstance(tech_skills, list):
+                        tech_str = ', '.join([str(s) for s in tech_skills if isinstance(s, str)])
+                        if tech_str:
+                            content_parts.append(f"Technical Skills: {tech_str}")
+                    
+                    soft_skills = skills.get('soft_skills', [])
+                    if soft_skills and isinstance(soft_skills, list):
+                        soft_str = ', '.join([str(s) for s in soft_skills if isinstance(s, str)])
+                        if soft_str:
+                            content_parts.append(f"Soft Skills: {soft_str}")
+                    
+                    # Add interests
+                    interests = profile.get('interests', {})
+                    academic_int = interests.get('academic', [])
+                    if academic_int and isinstance(academic_int, list):
+                        acad_str = ', '.join([str(i) for i in academic_int if isinstance(i, str)])
+                        if acad_str:
+                            content_parts.append(f"Academic Interests: {acad_str}")
+                    
+                    personal_int = interests.get('personal', [])
+                    if personal_int and isinstance(personal_int, list):
+                        pers_str = ', '.join([str(i) for i in personal_int if isinstance(i, str)])
+                        if pers_str:
+                            content_parts.append(f"Personal Interests: {pers_str}")
+                    
+                    # Add LLM parsed content if available
+                    if profile.get('llm_parsed_backup'):
+                        llm_data = profile.get('llm_parsed_backup', {})
+                        if llm_data.get('past_academic_profile_text'):
+                            content_parts.append(str(llm_data.get('past_academic_profile_text')))
+                    
+                    content = ' '.join(content_parts)
+                    
+                    if content.strip():
+                        # Index for keyword search
+                        index_profile(profile_id, email, full_name, content)
+                        indexed_count += 1
+                
+                except Exception as e:
+                    print(f"⚠️  Error indexing profile: {e}")
+                    continue
+            
+            print(f"✅ Indexed {indexed_count} profiles for keyword search")
+            print(f"ℹ️  Semantic embeddings will be generated in background...")
+            
+        except Exception as e:
+            print(f"⚠️  Profile indexing failed: {e}")
+
+# BACKGROUND EMBEDDING GENERATION FUNCTION
+def generate_embeddings_background():
+    """Generate embeddings in background after app starts"""
+    import time
+    time.sleep(5)  # Wait for Flask to fully start
+    
+    print("\n🔄 Background: Starting semantic embedding generation...")
+    
+    if not DATABASE_AVAILABLE or not db_manager or db_manager.db is None:
+        return
+    
+    try:
+        profiles = list(db_manager.db.profiles.find({"status": "active"}))
+        semantic_count = 0
+        
+        for profile in profiles:
+            try:
+                profile_id = str(profile.get('_id'))
+                email = profile.get('personal_info', {}).get('email', '')
+                full_name = profile.get('personal_info', {}).get('full_name', '')
+                
+                # Build content
+                content_parts = []
+                if full_name:
+                    content_parts.append(f"Name: {full_name}")
+                
+                personal_info = profile.get('personal_info', {})
+                if personal_info.get('major'):
+                    content_parts.append(f"Major: {personal_info.get('major')}")
+                if personal_info.get('program'):
+                    content_parts.append(f"Program: {personal_info.get('program')}")
+                
+                academic = profile.get('academic', {})
+                courses = academic.get('courses', [])
+                if courses and isinstance(courses, list):
+                    courses_str = ', '.join([str(c) for c in courses if isinstance(c, str)])
+                    if courses_str:
+                        content_parts.append(f"Courses: {courses_str}")
+                
+                certs = academic.get('certifications', [])
+                if certs and isinstance(certs, list):
+                    certs_str = ', '.join([str(c) for c in certs if isinstance(c, str)])
+                    if certs_str:
+                        content_parts.append(f"Certifications: {certs_str}")
+                
+                if academic.get('past_academic_profile_text'):
+                    content_parts.append(str(academic.get('past_academic_profile_text')))
+                
+                skills = profile.get('skills', {})
+                tech_skills = skills.get('technical', [])
+                if tech_skills and isinstance(tech_skills, list):
+                    tech_str = ', '.join([str(s) for s in tech_skills if isinstance(s, str)])
+                    if tech_str:
+                        content_parts.append(f"Technical Skills: {tech_str}")
+                
+                soft_skills = skills.get('soft_skills', [])
+                if soft_skills and isinstance(soft_skills, list):
+                    soft_str = ', '.join([str(s) for s in soft_skills if isinstance(s, str)])
+                    if soft_str:
+                        content_parts.append(f"Soft Skills: {soft_str}")
+                
+                interests = profile.get('interests', {})
+                academic_int = interests.get('academic', [])
+                if academic_int and isinstance(academic_int, list):
+                    acad_str = ', '.join([str(i) for i in academic_int if isinstance(i, str)])
+                    if acad_str:
+                        content_parts.append(f"Academic Interests: {acad_str}")
+                
+                personal_int = interests.get('personal', [])
+                if personal_int and isinstance(personal_int, list):
+                    pers_str = ', '.join([str(i) for i in personal_int if isinstance(i, str)])
+                    if pers_str:
+                        content_parts.append(f"Personal Interests: {pers_str}")
+                
+                if profile.get('llm_parsed_backup'):
+                    llm_data = profile.get('llm_parsed_backup', {})
+                    if llm_data.get('past_academic_profile_text'):
+                        content_parts.append(str(llm_data.get('past_academic_profile_text')))
+                
+                content = ' '.join(content_parts)
+                
+                if content.strip():
+                    # Generate embedding
+                    time.sleep(0.5)  # Rate limiting
+                    if generate_profile_embedding(profile_id, email, full_name, content):
+                        semantic_count += 1
+                        print(f"✅ Generated embedding {semantic_count} for {email}")
+            
+            except Exception as e:
+                print(f"⚠️  Background embedding error for {profile_id}: {str(e)[:100]}")
+                continue
+        
+        print(f"\n✅ Background: Generated {semantic_count} semantic embeddings")
+        
+    except Exception as e:
+        print(f"⚠️  Background embedding generation failed: {e}")
+
+# Start background embedding generation in a thread
+import threading
+if RESUME_SEARCH_AVAILABLE and DATABASE_AVAILABLE:
+    bg_thread = threading.Thread(target=generate_embeddings_background, daemon=True)
+    bg_thread.start()
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
