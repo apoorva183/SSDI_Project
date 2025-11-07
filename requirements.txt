@@ -21,7 +21,7 @@ numpy>=1.26.0
 
 # Data validation and parsing (updated for Python 3.13)
 pydantic>=2.6.0
-pydantic-ai==0.0.13
+pydantic-ai>=1.11.1
 
 # Date parsing
 python-dateutil==2.8.2
@@ -32,3 +32,4 @@ python-dateutil==2.8.2
 # - OpenAI needs to be >=1.54.3 for pydantic-ai compatibility
 # - Pydantic needs to be >=2.6.0 for Python 3.13 pre-compiled wheels
 # - NumPy needs to be >=1.26.0 for Python 3.13 support
+# - pydantic-ai >=1.11.1 includes all necessary dependencies (including griffe)
