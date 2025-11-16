@@ -47,5 +47,5 @@ A web application for matching students based on their academic profiles, skills
 - Student profile creation and management
 - ML-based similarity matching
 - MongoDB integration for data storage
-- Search functionality for profiles
+- Search functionality for profile
 - Swipe-based matching interface
