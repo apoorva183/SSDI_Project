@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NinerMatch - Student Connection Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="top-bar">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>connect@ninermatch.edu</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Call Us: +1 704 687 0000</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-bar">
+                <div class="nav-container">
+                    <div class="logo">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="NinerMatch Logo" class="logo-image">
+                        <div class="logo-text-container">
+                            <div class="logo-text">NINER</div>
+                            <div class="logo-university">MATCH</div>
+                        </div>
+                    </div>
+                    
+                    <nav>
+                        <ul class="nav-menu">
+                            <li class="nav-item"><a href="/" class="active">Home</a></li>
+                            <li class="nav-item"><a href="{{ url_for('search_page') }}">Search</a></li>
+                            {% if is_logged_in %}
+                            <li class="nav-item"><a href="{{ url_for('matches_page') }}">Find Matches</a></li>
+                            <li class="nav-item"><a href="/results">Results</a></li>
+                            <li class="account-dropdown">
+                                <div class="account-icon" onclick="toggleAccountMenu(event)">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="account-menu" id="accountMenu">
+                                    <div class="account-menu-header">
+                                        <div class="user-name">{{ user_name }}</div>
+                                    </div>
+                                    <a href="/edit-profile" class="account-menu-item">
+                                        <i class="fas fa-user-edit"></i>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                    <div class="account-menu-divider"></div>
+                                    <a href="/logout" class="account-menu-item">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="nav-item"><a href="/login">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% if is_logged_in %}
+                    <script>
+                        function toggleAccountMenu(event) {
+                            event.stopPropagation();
+                            const menu = document.getElementById('accountMenu');
+                            menu.classList.toggle('show');
+                        }
+                        
+                        // Close menu when clicking outside
+                        document.addEventListener('click', function(event) {
+                            const menu = document.getElementById('accountMenu');
+                            if (menu && menu.classList.contains('show')) {
+                                menu.classList.remove('show');
+                            }
+                        });
+                    </script>
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Student Connection Platform</h1>
+                    <p class="hero-subtitle">Connect with fellow students, build academic partnerships, and create lasting friendships through intelligent matching based on your profile and interests.</p>
+                    <button class="cta-button" onclick="showUploadSection()">Create Profile</button>
+                </div>
+            </div>
+            
+            <div id="uploadSection" class="upload-section" style="display: none;">
+                <div class="section-content">
+                    <h2>Create Your Student Profile</h2>
+                    <p class="subtitle">Upload your resume or fill out the form to get started</p>
+
+                    <div class="upload-options">
+                        <div class="upload-option">
+                            <div id="dropZone" class="drop-zone">
+                                <div class="drop-content">
+                                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                                    <h3>Upload Resume (Optional)</h3>
+                                    <p>or <button type="button" class="browse-btn" id="browseBtn">browse files</button></p>
+                                    <small>Supports PDF files up to 16MB</small>
+                                </div>
+                                <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                            </div>
+                            
+
+                        </div>
+                        
+                        <div class="option-divider">
+                            <span>OR</span>
+                        </div>
+                        
+                        <div class="upload-option">
+                            <button class="manual-form-btn" onclick="window.location.href='/review'">
+                                <i class="fas fa-edit"></i>
+                                <h3>Fill Out Manually</h3>
+                                <p>Create your profile by filling out the form directly</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="uploadProgress" class="upload-progress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <p class="progress-text">Processing your resume...</p>
+                    </div>
+
+                    <div id="errorMessage" class="error-message" style="display: none;"></div>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: #ff6b35;">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Academic Matching</h3>
+                        <p>Connect with students in similar courses, share study materials, and form study groups based on your academic interests.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: #1a237e;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Social Connections</h3>
+                        <p>Find friends with similar interests, hobbies, and backgrounds. Build lasting relationships beyond academics.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: #ff6b35;">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Professional Network</h3>
+                        <p>Connect with students for internships, projects, and career opportunities. Grow your professional network early.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: #1a237e;">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>Cultural Exchange</h3>
+                        <p>Connect with international students, practice languages, and learn about different cultures and perspectives.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 NinerMatch - Connecting Students, Building Futures</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

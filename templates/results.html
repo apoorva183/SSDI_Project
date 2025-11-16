@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Connections - NinerMatch</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='results.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="top-bar">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>connect@ninermatch.edu</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Call Us: +1 704 687 0000</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-bar">
+                <div class="nav-container">
+                    <div class="logo">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="NinerMatch Logo" class="logo-image">
+                        <div class="logo-text-container">
+                            <div class="logo-text">NINER</div>
+                            <div class="logo-university">MATCH</div>
+                        </div>
+                    </div>
+                    
+                    <nav>
+                        <ul class="nav-menu">
+                            <li class="nav-item"><a href="/">Home</a></li>
+                            <li class="nav-item"><a href="{{ url_for('search_page') }}">Search</a></li>
+                            <li class="nav-item"><a href="{{ url_for('matches_page') }}">Find Matches</a></li>
+                            <li class="nav-item"><a href="/results" class="active">Results</a></li>
+                            <li class="account-dropdown">
+                                <div class="account-icon" onclick="toggleAccountMenu(event)">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="account-menu" id="accountMenu">
+                                    <div class="account-menu-header">
+                                        <div class="user-name">{% if user_name %}{{ user_name }}{% else %}User{% endif %}</div>
+                                        <div class="user-email">{% if user_email %}{{ user_email }}{% endif %}</div>
+                                    </div>
+                                    <a href="/edit-profile" class="account-menu-item">
+                                        <i class="fas fa-user-edit"></i>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                    <div class="account-menu-divider"></div>
+                                    <a href="/logout" class="account-menu-item">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                    <script>
+                        function toggleAccountMenu(event) {
+                            event.stopPropagation();
+                            const menu = document.getElementById('accountMenu');
+                            menu.classList.toggle('show');
+                        }
+                        
+                        // Close menu when clicking outside
+                        document.addEventListener('click', function(event) {
+                            const menu = document.getElementById('accountMenu');
+                            if (menu && menu.classList.contains('show')) {
+                                menu.classList.remove('show');
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </header>
+
+        <div class="results-container">
+            <!-- Sidebar Filters -->
+            <aside class="filters-sidebar">
+            <h2>Filters</h2>
+            
+            <div class="filter-section">
+                <h3>Search</h3>
+                <input type="text" id="searchInput" placeholder="Search by name..." class="filter-input">
+            </div>
+            
+            <div class="filter-section">
+                <h3>Match Type</h3>
+                <label class="filter-checkbox">
+                    <input type="checkbox" value="liked" checked> Liked by Me
+                </label>
+                <label class="filter-checkbox">
+                    <input type="checkbox" value="all"> All Matches
+                </label>
+            </div>
+            
+            <div class="filter-section">
+                <h3>Course</h3>
+                <select id="courseFilter" class="filter-select">
+                    <option value="">All Courses</option>
+                    <option value="ITCS 6150">ITCS 6150 - Intelligent Systems</option>
+                    <option value="ITCS 6114">ITCS 6114 - Algorithms</option>
+                    <option value="ITCS 6156">ITCS 6156 - Machine Learning</option>
+                    <option value="ITCS 8010">ITCS 8010 - Topics in CS</option>
+                    <option value="ITCS 6162">ITCS 6162 - Knowledge Discovery</option>
+                    <option value="ITCS 6155">ITCS 6155 - Software Engineering</option>
+                    <option value="ITCS 6100">ITCS 6100 - Big Data Analytics</option>
+                    <option value="ITCS 6165">ITCS 6165 - Network Security</option>
+                </select>
+            </div>
+            
+            <div class="filter-section">
+                <h3>Skills</h3>
+                <select id="skillFilter" class="filter-select">
+                    <option value="">All Skills</option>
+                    <option value="Python">Python</option>
+                    <option value="Java">Java</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="C++">C++</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                    <option value="React">React</option>
+                    <option value="Node.js">Node.js</option>
+                    <option value="AWS">AWS</option>
+                    <option value="Docker">Docker</option>
+                </select>
+            </div>
+            
+            <div class="filter-section">
+                <h3>Academic Level</h3>
+                <select id="levelFilter" class="filter-select">
+                    <option value="">All Levels</option>
+                    <option value="graduate">Graduate</option>
+                    <option value="undergraduate">Undergraduate</option>
+                    <option value="phd">PhD</option>
+                </select>
+            </div>
+            
+            <div class="filter-actions">
+                <button id="applyFilters" class="btn-apply">Apply Filters</button>
+                <button id="clearFilters" class="btn-clear">Clear All</button>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="results-main">
+            <div class="results-header">
+                <h2>My Connections <span id="resultsCount">(0)</span></h2>
+            </div>
+            
+            <!-- Results Grid -->
+            <div id="resultsGrid" class="results-grid">
+                <!-- Profile cards will be dynamically inserted here -->
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-state">
+                <div class="spinner"></div>
+                <p>Loading your connections...</p>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <h3>No connections found</h3>
+                <p>Try adjusting your filters or start swiping to find matches!</p>
+                <a href="/matches" class="btn-find-matches">Find Matches</a>
+            </div>
+        </main>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2025 NinerMatch - Connecting Students, Building Futures</p>
+        </footer>
+    </div>
+    
+    <script>
+        const userEmail = new URLSearchParams(window.location.search).get('email') || '';
+    </script>
+    <script src="{{ url_for('static', filename='results.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!-- templates/search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NinerMatch - Search Resumes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="top-bar">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>connect@ninermatch.edu</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>Call Us: +1 704 687 0000</span>
+                </div>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <div class="nav-container">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="NinerMatch Logo" class="logo-image">
+                    <div class="logo-text-container">
+                        <div class="logo-text">NINER</div>
+                        <div class="logo-university">MATCH</div>
+                    </div>
+                </div>
+                <nav>
+                    <ul class="nav-menu">
+                        <li class="nav-item"><a href="/">Home</a></li>
+                        <li class="nav-item"><a href="{{ url_for('search_page') }}" class="active">Search</a></li>
+                        {% if is_logged_in %}
+                        <li class="nav-item"><a href="{{ url_for('matches_page') }}">Find Matches</a></li>
+                        <li class="nav-item"><a href="/results">Results</a></li>
+                        <li class="account-dropdown">
+                            <div class="account-icon" onclick="toggleAccountMenu(event)">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="account-menu" id="accountMenu">
+                                <div class="account-menu-header">
+                                    <div class="user-name">{% if user_name %}{{ user_name }}{% else %}User{% endif %}</div>
+                                    <div class="user-email">{% if user_email %}{{ user_email }}{% endif %}</div>
+                                </div>
+                                <a href="/edit-profile" class="account-menu-item">
+                                    <i class="fas fa-user-edit"></i>
+                                    <span>Edit Profile</span>
+                                </a>
+                                <div class="account-menu-divider"></div>
+                                <a href="/logout" class="account-menu-item">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </li>
+                        {% else %}
+                        <li class="nav-item"><a href="/login">Login</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% if is_logged_in %}
+                <script>
+                    function toggleAccountMenu(event) {
+                        event.stopPropagation();
+                        const menu = document.getElementById('accountMenu');
+                        menu.classList.toggle('show');
+                    }
+                    
+                    // Close menu when clicking outside
+                    document.addEventListener('click', function(event) {
+                        const menu = document.getElementById('accountMenu');
+                        if (menu && menu.classList.contains('show')) {
+                            menu.classList.remove('show');
+                        }
+                    });
+                </script>
+                {% endif %}
+                <!-- Search students input removed for consistency -->
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="search-hero">
+            <h1>Search Student Profiles</h1>
+            <p class="search-subtitle">Advanced AI-powered search finds students by skills, experience, and meaning</p>
+        </div>
+
+        <div class="search-page">
+            <div class="search-box-wrapper">
+                <label for="searchBox">Search query</label>
+                <div class="search-input-group">
+                    <input type="text" id="searchBox" placeholder="machine learning engineer, python developer, data scientist">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="search-info" id="searchInfo" style="display: none;">
+                    <small><i class="fas fa-robot"></i> <span id="searchCapabilities">Loading search capabilities...</span></small>
+                </div>
+            </div>
+
+            <div id="searchResults" class="search-results"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 NinerMatch - Connecting Students, Building Futures</p>
+    </footer>
+</div>
+
+<script src="{{ url_for('static', filename='search.js') }}"></script>
+</body>
+</html>

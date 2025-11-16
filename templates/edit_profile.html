@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - NinerMatch</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ cache_buster or 1 }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="top-bar">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>connect@ninermatch.edu</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Call Us: +1 704 687 0000</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-bar">
+                <div class="nav-container">
+                    <div class="logo">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="NinerMatch Logo" class="logo-image">
+                        <div class="logo-text-container">
+                            <div class="logo-text">NINER</div>
+                            <div class="logo-university">MATCH</div>
+                        </div>
+                    </div>
+                    
+                    <nav>
+                        <ul class="nav-menu">
+                            <li class="nav-item"><a href="/">Home</a></li>
+                            <li class="nav-item"><a href="{{ url_for('search_page') }}">Search</a></li>
+                            <li class="nav-item"><a href="{{ url_for('matches_page') }}">Find Matches</a></li>
+                            <li class="nav-item"><a href="/results">Results</a></li>
+                            <li class="account-dropdown">
+                                <div class="account-icon" onclick="toggleAccountMenu(event)">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="account-menu" id="accountMenu">
+                                    <div class="account-menu-header">
+                                        <div class="user-name">{% if user_name %}{{ user_name }}{% else %}User{% endif %}</div>
+                                        <div class="user-email">{% if user_email %}{{ user_email }}{% endif %}</div>
+                                    </div>
+                                    <a href="/edit-profile" class="account-menu-item">
+                                        <i class="fas fa-user-edit"></i>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                    <div class="account-menu-divider"></div>
+                                    <a href="/logout" class="account-menu-item">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                    <script>
+                        function toggleAccountMenu(event) {
+                            event.stopPropagation();
+                            const menu = document.getElementById('accountMenu');
+                            menu.classList.toggle('show');
+                        }
+                        
+                        // Close menu when clicking outside
+                        document.addEventListener('click', function(event) {
+                            const menu = document.getElementById('accountMenu');
+                            if (menu && menu.classList.contains('show')) {
+                                menu.classList.remove('show');
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="review-section">
+                <div class="section-header">
+                    <h2>Edit Your Profile</h2>
+                    <p>Update your information to improve your matches</p>
+                </div>
+
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i> Profile updated successfully!
+                </div>
+
+                <form id="profileForm" class="profile-form">
+                    <!-- Profile Information (Basic) - Email cannot be changed -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Profile Information (Basic)</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email (cannot be changed)</label>
+                                <input type="email" id="email" name="email" readonly style="background: #f5f5f5; cursor: not-allowed;">
+                            </div>
+                            <div class="form-group">
+                                <label for="year">Year *</label>
+                                <select id="year" name="year" required>
+                                    <option value="">Select your year</option>
+                                    <option value="freshman">Freshman</option>
+                                    <option value="sophomore">Sophomore</option>
+                                    <option value="junior">Junior</option>
+                                    <option value="senior">Senior</option>
+                                    <option value="graduate">Graduate Student</option>
+                                    <option value="phd">PhD Student</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="program">Program *</label>
+                                <input type="text" id="program" name="program" required placeholder="e.g., Computer Science, Business Administration">
+                            </div>
+                            <div class="form-group">
+                                <label for="major">Major *</label>
+                                <input type="text" id="major" name="major" required placeholder="e.g., Software Engineering, Finance">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Background & Languages -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-globe"></i> Background & Languages</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="languages">Languages Spoken</label>
+                                <div class="skills-input">
+                                    <input type="text" id="languageInput" placeholder="Type a language and press Enter">
+                                    <div id="languages" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="countryOrigin">Country of Origin</label>
+                                <input type="text" id="countryOrigin" name="countryOrigin" placeholder="Country of origin">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Academic Details -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-book"></i> Academic Details</h3>
+                        
+                        <div class="form-group">
+                            <label for="pastAcademicProfile">Previous Academic Background</label>
+                            <textarea id="pastAcademicProfile" name="pastAcademicProfile" rows="3" 
+                                placeholder="Describe your previous education"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="courses">Courses</label>
+                            <div class="course-search-container">
+                                <input type="text" id="courseSearchInput" placeholder="Search courses" autocomplete="off">
+                                <div id="courseSearchResults" class="search-dropdown" style="display: none;"></div>
+                                <div id="selectedCourses" class="skills-container"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="certifications">Certifications</label>
+                            <div class="skills-input">
+                                <input type="text" id="certificationInput" placeholder="Type a certification and press Enter">
+                                <div id="certifications" class="skills-container"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Experience -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-briefcase"></i> Professional Experience</h3>
+                        <div id="experienceContainer">
+                            <!-- Experience items will be dynamically added here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary add-experience-btn" onclick="addExperienceItem()">
+                            <i class="fas fa-plus"></i> Add Experience
+                        </button>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-tools"></i> Skills</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="technicalSkills">Technical Skills</label>
+                                <div class="skills-input">
+                                    <input type="text" id="technicalSkillInput" placeholder="Type a skill and press Enter">
+                                    <div id="technicalSkills" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="softSkills">Soft Skills</label>
+                                <div class="skills-input">
+                                    <input type="text" id="softSkillInput" placeholder="Type a skill and press Enter">
+                                    <div id="softSkills" class="skills-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interests & Activities -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-heart"></i> Interests & Activities</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="academicInterests">Academic Interests</label>
+                                <div class="skills-input">
+                                    <input type="text" id="academicInterestInput" placeholder="Type an interest and press Enter">
+                                    <div id="academicInterests" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="personalInterests">Personal Interests</label>
+                                <div class="skills-input">
+                                    <input type="text" id="personalInterestInput" placeholder="Type an interest and press Enter">
+                                    <div id="personalInterests" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="conferences">Conferences Attended</label>
+                                <div class="skills-input">
+                                    <input type="text" id="conferenceInput" placeholder="Type a conference and press Enter">
+                                    <div id="conferences" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="organizations">Organizations & Clubs</label>
+                                <div class="skills-input">
+                                    <input type="text" id="organizationInput" placeholder="Type an organization and press Enter">
+                                    <div id="organizations" class="skills-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="submit-button">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <a href="/matches" class="cancel-button">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 NinerMatch - Connecting Students, Building Futures</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='review.js') }}?v={{ cache_buster or 1 }}"></script>
+    <script>
+        // Helper function to add simple skill tags (without proficiency levels)
+        function addSimpleSkill(containerId, skillText) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            // Check if skill already exists
+            const existingSkills = Array.from(container.querySelectorAll('.skill-tag')).map(tag => {
+                return tag.querySelector('.skill-text').textContent.trim();
+            });
+            
+            if (existingSkills.includes(skillText)) {
+                return; // Don't add duplicates
+            }
+            
+            const skillTag = document.createElement('div');
+            skillTag.className = 'skill-tag';
+            skillTag.innerHTML = `
+                <span class="skill-text">${skillText}</span>
+                <button type="button" class="remove-skill" onclick="removeSkill(this)">×</button>
+            `;
+            
+            container.appendChild(skillTag);
+        }
+
+        // Helper to add course tags (similar to review.js but accessible globally)
+        function addSimpleCourse(courseText) {
+            const container = document.getElementById('selectedCourses');
+            if (!container) return;
+            
+            // Check if course already exists
+            const existingCourses = Array.from(container.querySelectorAll('.skill-tag')).map(tag => {
+                return tag.querySelector('.skill-text').textContent.trim();
+            });
+            
+            if (existingCourses.includes(courseText)) {
+                return; // Don't add duplicates
+            }
+            
+            const courseTag = document.createElement('div');
+            courseTag.className = 'skill-tag';
+            courseTag.innerHTML = `
+                <span class="skill-text">${courseText}</span>
+                <button type="button" class="remove-skill" onclick="removeSkill(this)">×</button>
+            `;
+            
+            container.appendChild(courseTag);
+        }
+
+        // Load current profile data
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Wait a bit for review.js to fully initialize
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            try {
+                console.log('Loading profile data...');
+                const response = await fetch('/api/get-my-profile');
+                const data = await response.json();
+                
+                console.log('Profile data received:', data);
+                
+                if (data.success && data.profile) {
+                    populateEditForm(data.profile);
+                } else {
+                    console.error('Failed to load profile:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        });
+
+        function populateEditForm(profile) {
+            console.log('Populating form with profile:', profile);
+            
+            // Basic info
+            document.getElementById('fullName').value = profile.personal_info?.full_name || '';
+            document.getElementById('email').value = profile.personal_info?.email || '';
+            document.getElementById('year').value = profile.personal_info?.year || '';
+            document.getElementById('program').value = profile.personal_info?.program || '';
+            document.getElementById('major').value = profile.personal_info?.major || '';
+
+            // Background
+            document.getElementById('countryOrigin').value = profile.background?.country_origin || '';
+
+            // Languages (handle object or string, show proficiency)
+            const languages = profile.background?.languages || [];
+            languages.forEach(lang => {
+                if (typeof lang === 'object' && lang.language) {
+                    // Use addSkill from review.js to show proficiency dropdown
+                    addSkill('languages', lang.language, lang.languageProficiency || 'Fluent');
+                } else {
+                    addSkill('languages', lang, 'Fluent');
+                }
+            });
+
+            // Academic
+            document.getElementById('pastAcademicProfile').value = profile.past_academic_profile_text || '';
+
+            // Courses
+            const courses = profile.academic?.courses || [];
+            courses.forEach(course => {
+                addSimpleCourse(course);
+            });
+
+            // Certifications
+            const certs = profile.academic?.certifications || [];
+            certs.forEach(cert => {
+                addSimpleSkill('certifications', cert);
+            });
+
+            // Technical Skills (handle object or string, show proficiency)
+            const techSkills = profile.skills?.technical || [];
+            techSkills.forEach(skill => {
+                if (typeof skill === 'object' && skill.skillName) {
+                    addSkill('technicalSkills', skill.skillName, skill.skillProficiency || 'Intermediate');
+                } else {
+                    addSkill('technicalSkills', skill, 'Intermediate');
+                }
+            });
+
+            // Soft Skills
+            const softSkills = profile.skills?.soft_skills || [];
+            softSkills.forEach(skill => {
+                addSimpleSkill('softSkills', skill);
+            });
+
+            // Interests
+            const academicInterests = profile.interests?.academic || [];
+            academicInterests.forEach(interest => {
+                addSimpleSkill('academicInterests', interest);
+            });
+
+            const personalInterests = profile.interests?.personal || [];
+            personalInterests.forEach(interest => {
+                addSimpleSkill('personalInterests', interest);
+            });
+
+            const conferences = profile.interests?.conferences || [];
+            conferences.forEach(conf => {
+                addSimpleSkill('conferences', conf);
+            });
+
+            const organizations = profile.interests?.organizations || [];
+            organizations.forEach(org => {
+                addSimpleSkill('organizations', org);
+            });
+
+            // Professional Experience
+            const experienceContainer = document.getElementById('experienceContainer');
+            if (experienceContainer) {
+                experienceContainer.innerHTML = ''; // Clear any existing experience items
+            }
+
+            const experiences = profile.professional_experience || [];
+            if (experiences.length > 0) {
+                experiences.forEach(exp => {
+                    populateExperienceItem(exp);
+                });
+            } else {
+                // Add one empty experience item if no existing experiences
+                addExperienceItem();
+            }
+
+            console.log('Form populated successfully');
+        }
+
+        // Override submit to update instead of create
+        window.addEventListener('load', function() {
+            const form = document.getElementById('profileForm');
+            if (form) {
+                form.removeEventListener('submit', handleFormSubmit); // Remove default handler
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+                    submitBtn.disabled = true;
+                    
+                    try {
+                        // Collect form data using existing functions from review.js
+                        const profileData = {
+                            personal_info: {
+                                full_name: document.getElementById('fullName').value,
+                                email: document.getElementById('email').value,
+                                year: document.getElementById('year').value,
+                                program: document.getElementById('program').value,
+                                major: document.getElementById('major').value
+                            },
+                            background: {
+                                country_origin: document.getElementById('countryOrigin').value,
+                                languages: collectSkills('languages')
+                            },
+                            past_academic_profile_text: document.getElementById('pastAcademicProfile').value,
+                            academic: {
+                                courses: collectCourses(),
+                                certifications: collectSkills('certifications')
+                            },
+                            skills: {
+                                technical: collectSkills('technicalSkills'),
+                                soft_skills: collectSkills('softSkills')
+                            },
+                            interests: {
+                                academic: collectSkills('academicInterests'),
+                                personal: collectSkills('personalInterests'),
+                                conferences: collectSkills('conferences'),
+                                organizations: collectSkills('organizations')
+                            }
+                        };
+                        
+                        const response = await fetch('/api/update-profile', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(profileData)
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            const successMsg = document.getElementById('successMessage');
+                            successMsg.style.display = 'block';
+                            window.scrollTo(0, 0);
+                            
+                            setTimeout(() => {
+                                window.location.href = '/matches';
+                            }, 2000);
+                        } else {
+                            alert('Failed to update profile: ' + (data.error || 'Unknown error'));
+                        }
+                    } catch (error) {
+                        console.error('Update error:', error);
+                        alert('Failed to update profile: ' + error.message);
+                    } finally {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

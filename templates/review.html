@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NinerMatch - Create Profile</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ cache_buster or 1 }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="top-bar">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>connect@ninermatch.edu</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Call Us: +1 704 687 0000</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-bar">
+                <div class="nav-container">
+                    <div class="logo">
+                        <img src="{{ url_for('static', filename='logo.png') }}" alt="NinerMatch Logo" class="logo-image">
+                        <div class="logo-text-container">
+                            <div class="logo-text">NINER</div>
+                            <div class="logo-university">MATCH</div>
+                        </div>
+                    </div>
+                    
+                    <nav>
+                        <ul class="nav-menu">
+                            <li class="nav-item"><a href="/">Home</a></li>
+                            <li class="nav-item"><a href="{{ url_for('search_page') }}">Search</a></li>
+                            {% if is_logged_in %}
+                            <li class="nav-item"><a href="{{ url_for('matches_page') }}">Find Matches</a></li>
+                            <li class="nav-item"><a href="/results">Results</a></li>
+                            <li class="account-dropdown">
+                                <div class="account-icon" onclick="toggleAccountMenu(event)">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="account-menu" id="accountMenu">
+                                    <div class="account-menu-header">
+                                        <div class="user-name">{% if user_name %}{{ user_name }}{% else %}User{% endif %}</div>
+                                        <div class="user-email">{% if user_email %}{{ user_email }}{% endif %}</div>
+                                    </div>
+                                    <a href="/edit-profile" class="account-menu-item">
+                                        <i class="fas fa-user-edit"></i>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                    <div class="account-menu-divider"></div>
+                                    <a href="/logout" class="account-menu-item">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span>Logout</span>
+                                    </a>
+                                </div>
+                            </li>
+                            {% else %}
+                            <li class="nav-item"><a href="/login">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% if is_logged_in %}
+                    <script>
+                        function toggleAccountMenu(event) {
+                            event.stopPropagation();
+                            const menu = document.getElementById('accountMenu');
+                            menu.classList.toggle('show');
+                        }
+                        
+                        // Close menu when clicking outside
+                        document.addEventListener('click', function(event) {
+                            const menu = document.getElementById('accountMenu');
+                            if (menu && menu.classList.contains('show')) {
+                                menu.classList.remove('show');
+                            }
+                        });
+                    </script>
+                    {% endif %}
+                    
+                    <!-- Search students input removed for consistency -->
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="review-section">
+                <div class="section-header">
+                    <h2>Create Your Student Profile</h2>
+                    <p>Fill out your information to connect with other students</p>
+                </div>
+
+                <form id="profileForm" class="profile-form">
+                    <!-- 🎓 Profile Information (Basic) -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Profile Information (Basic)</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email (campus email preferred) *</label>
+                                <input type="email" id="email" name="email" required placeholder="yourname@uncc.edu">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password *</label>
+                                <input type="password" id="password" name="password" required placeholder="Create a secure password" minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="year">Year *</label>
+                                <select id="year" name="year" required>
+                                    <option value="">Select your year</option>
+                                    <option value="freshman">Freshman</option>
+                                    <option value="sophomore">Sophomore</option>
+                                    <option value="junior">Junior</option>
+                                    <option value="senior">Senior</option>
+                                    <option value="graduate">Graduate Student</option>
+                                    <option value="phd">PhD Student</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="program">Program *</label>
+                                <input type="text" id="program" name="program" required placeholder="e.g., Computer Science, Business Administration">
+                            </div>
+                            <div class="form-group">
+                                <label for="major">Major *</label>
+                                <input type="text" id="major" name="major" required placeholder="e.g., Software Engineering, Finance">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 🌍 Background & Languages -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-globe"></i> Background & Languages</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="languages">Languages Spoken</label>
+                                <div class="skills-input">
+                                    <input type="text" id="languageInput" placeholder="Type a language and press Enter (e.g., English, Spanish, Hindi)">
+                                    <div id="languages" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="countryOrigin">Country of Origin</label>
+                                <input type="text" id="countryOrigin" name="countryOrigin" placeholder="Useful for international student connections">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 📚 Academic Details - UPDATED VERSION WITH COURSE SEARCH -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-book"></i> Academic Details</h3>
+                        
+                        <!-- Previous Academic Background -->
+                        <div class="form-group">
+                            <label for="pastAcademicProfile">Previous Academic Background</label>
+                            <textarea id="pastAcademicProfile" name="pastAcademicProfile" rows="3" 
+                                placeholder="Describe your previous education (e.g., Bachelor's degree from State University, high school background, etc.)"></textarea>
+                        </div>
+                        
+                        <!-- Unified Course Search -->
+                        <div class="form-group">
+                            <label for="courses">Courses (search by code or name)</label>
+                            <div class="course-search-container">
+                                <input type="text" id="courseSearchInput" placeholder="Search courses (e.g., ITCS 3160, Database Design, Machine Learning)" autocomplete="off">
+                                <div id="courseSearchResults" class="search-dropdown" style="display: none;"></div>
+                                <div id="selectedCourses" class="skills-container"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="certifications">Certifications (if any)</label>
+                            <div class="skills-input">
+                                <input type="text" id="certificationInput" placeholder="Type a certification and press Enter (e.g., AWS Cloud Practitioner)">
+                                <div id="certifications" class="skills-container"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 💼 Professional Experience -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-briefcase"></i> Professional Experience</h3>
+                        <div id="experienceContainer">
+                            <!-- Experience items will be dynamically added here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary add-experience-btn" onclick="addExperienceItem()">
+                            <i class="fas fa-plus"></i> Add Experience
+                        </button>
+                    </div>
+
+                    <!-- 🛠️ Skills -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-tools"></i> Skills</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="technicalSkills">Technical Skills</label>
+                                <div class="skills-input">
+                                    <input type="text" id="technicalSkillInput" placeholder="Type a skill and press Enter (e.g., Python, SQL, Tableau)">
+                                    <div id="technicalSkills" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="softSkills">Soft Skills</label>
+                                <div class="skills-input">
+                                    <input type="text" id="softSkillInput" placeholder="Type a skill and press Enter (e.g., Public speaking, Teamwork)">
+                                    <div id="softSkills" class="skills-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 👥 Interests & Activities -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-heart"></i> Interests & Activities</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="academicInterests">Academic Interests</label>
+                                <div class="skills-input">
+                                    <input type="text" id="academicInterestInput" placeholder="Type an interest and press Enter (e.g., AI, Databases, Data Visualization)">
+                                    <div id="academicInterests" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="personalInterests">Personal Interests</label>
+                                <div class="skills-input">
+                                    <input type="text" id="personalInterestInput" placeholder="Type an interest and press Enter (e.g., Sports, Music, Hiking)">
+                                    <div id="personalInterests" class="skills-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="conferences">Conferences / Events Attended</label>
+                                <div class="skills-input">
+                                    <input type="text" id="conferenceInput" placeholder="Type an event and press Enter (e.g., Grace Hopper, HackNC)">
+                                    <div id="conferences" class="skills-container"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="organizations">Clubs / Organizations</label>
+                                <div class="skills-input">
+                                    <input type="text" id="organizationInput" placeholder="Type a club and press Enter (e.g., ACM, IEEE, Debate Club)">
+                                    <div id="organizations" class="skills-container"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='/'">
+                            <i class="fas fa-arrow-left"></i> Back to Upload
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Profile
+                        </button>
+                    </div>
+                </form>
+
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Profile Saved Successfully!</h3>
+                    <p>Your profile has been created and you're ready to start matching with other students.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 NinerMatch - Connecting Students, Building Futures</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='review.js') }}?v={{ cache_buster or 1 }}"></script>
+    
+    <!-- Populate form with parsed resume data -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const parsedData = {{ parsed_data | tojson | safe }};
+        
+        if (parsedData && Object.keys(parsedData).length > 0) {
+            console.log('Populating form with LLM parsed data:', parsedData);
+            
+            // Use the new populateForm function that handles LLM data structure
+            populateForm(parsedData);
+            
+            console.log('Form population completed');
+        } else {
+            console.log('No parsed data available to populate form');
+        }
+    });
+    </script>
+</body>
+</html>

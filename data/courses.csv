@@ -1,0 +1,308 @@
+Course,Code,Title
+ITCS,1101,Introduction to Computer Concepts
+ITCS,1102,Advanced Internet Concepts
+ITCS,1212,Introduction to Computer Science
+ITCS,1301,Introduction to the Financial Services Industry
+ITCS,1610,Computing Applications Seminar
+ITCS,1712,Introduction to Computer Science
+ITCS,2050,Topics in Computer Science
+ITCS,2116,C Programming
+ITCS,2215,Design and Analysis of Algorithms
+ITCS,2231,Introduction to Business Programming
+ITCS,2301,Financial Services Computing Environment
+ITCS,3050,Topics in Computer Science
+ITCS,3112,Design and Implementation of Object-Oriented Systems
+ITCS,3120,Introduction to Interactive Computer Graphics
+ITCS,3134,Digital Image Processing
+ITCS,3143,Operating Systems
+ITCS,3152,Symbolic Programming
+ITCS,3153,Introduction to Artificial Intelligence
+ITCS,3156,Introduction to Machine Learning
+ITCS,3160,Database Design and Implementation
+ITCS,3160,Delves into the core principles and advanced techniques of
+ITCS,3162,Introduction to Data Mining
+ITCS,3166,Introduction to Computer Networks
+ITCS,3166,Introduction to Computer Networks (3)
+ITCS,3190,Introduction to Cloud Computing for Data Analysis
+ITCS,3211,Computing Leaders Team Projects
+ITCS,3212,Computing Leaders Team Leaders
+ITCS,3216,Introduction to Cognitive Science
+ITCS,4010,Topics in Computer Science
+ITCS,4101,Introduction to Natural Language Processing
+ITCS,4102,Programming Languages
+ITCS,4114,Real World Algorithms
+ITCS,4120,Introduction to Computer Graphics
+ITCS,4120,Introduction to Computer Graphics (3) (this is already a
+ITCS,4121,Information Visualization
+ITCS,4122,Visual Analytics
+ITCS,4123,Visualization and Visual Communication
+ITCS,4124,Advanced 3D Computer Graphics
+ITCS,4125,Introduction to Virtual Reality and Augmented Reality
+ITCS,4141,Computer Systems and Architecture: A Software
+ITCS,4145,Parallel Programming
+ITCS,4150,Mobile Robotics
+ITCS,4151,Intelligent Robotics
+ITCS,4152,Introduction to Computer Vision
+ITCS,4156,Introduction to Machine Learning
+ITCS,4158,Blockchain System Architecture
+ITCS,4161,Intellectual Property Aspects of Computing
+ITCS,4165,Computing Entrepreneurship
+ITCS,4180,Mobile Application Development
+ITCS,4182,Introduction to High-Performance Computing
+ITCS,4230,Introduction to Game Design and Development
+ITCS,4231,Advanced Game Design and Development
+ITCS,4232,Game Design and Development Studio
+ITCS,4235,Game Engine Construction
+ITCS,4235,Game Engine Construction (3)
+ITCS,4236,Artificial Intelligence for Computer Games
+ITCS,4238,Intelligent and Interactive System Studio
+ITCS,5010,Topics in Computer Science
+ITCS,5102,Survey of Programming Languages
+ITCS,5111,Introduction to Natural Language Processing
+ITCS,5121,Information Visualization
+ITCS,5122,Visual Analytics
+ITCS,5123,Visualization and Visual Communication
+ITCS,5141,Computer Organization and Architecture
+ITCS,5150,Mobile Robotics
+ITCS,5152,Computer Vision
+ITCS,5153,Applied Artificial Intelligence
+ITCS,5154,Applied Machine Learning
+ITCS,5156,Applied Machine Learning
+ITCS,5161,Intellectual Property Aspects of Computing
+ITCS,5180,Mobile Application Development
+ITCS,5182,Introduction to High Performance Computing
+ITCS,5230,Introduction to Game Design and
+ITCS,5231,Advanced Game Design and Development
+ITCS,5232,Game Design and Development Studio
+ITCS,5235,Game Engine Construction
+ITCS,5236,Artificial Intelligence for Computer Games
+ITCS,5356,Introduction to Machine Learning
+ITCS,6010,Topics in Computer Science
+ITCS,6040,Topics in Data Science
+ITCS,6050,Topics in Artificial Intelligence
+ITCS,6050,Topics in Intelligent Systems
+ITCS,6100,Big Data Analytics for Competitive Advantage
+ITCS,6101,Natural Language Processing
+ITCS,6112,Software System Design and Implementation
+ITCS,6114,Algorithm and Data Structures
+ITCS,6114,Algorithms and Data Structures
+ITCS,6115,Advanced Algorithms
+ITCS,6116,Optimization for Machine Learning
+ITCS,6120,Computer Graphics
+ITCS,6121,Data and Information Visualization
+ITCS,6124,Illustrative Visualization
+ITCS,6125,Virtual and Augmented Reality
+ITCS,6132,Modeling and Analysis of Communication
+ITCS,6134,Digital Image Processing
+ITCS,6141,Computer System and Architecture:
+ITCS,6144,Operating Systems Design
+ITCS,6145,Parallel Computing
+ITCS,6150,Artificial Intelligence
+ITCS,6150,Intelligent Systems
+ITCS,6151,Intelligent Robotics
+ITCS,6152,Robot Motion Planning
+ITCS,6153,Neural Networks
+ITCS,6155,Knowledge-Based Systems
+ITCS,6156,Machine Learning
+ITCS,6157,Visual Databases
+ITCS,6158,Natural Language Processing
+ITCS,6160,Database Systems
+ITCS,6161,Advanced Topics in Database Systems
+ITCS,6162,Data Mining
+ITCS,6162,Knowledge Discovery in Databases
+ITCS,6163,Data Warehousing
+ITCS,6165,Coding and Information Theory
+ITCS,6165,Information measures and their properties;
+ITCS,6166,Computer Communications and Networks
+ITCS,6167,Advanced Networking Protocols
+ITCS,6168,Wireless Communication Networks
+ITCS,6169,Computer Vision
+ITCS,6190,Cloud Computing for Data Analysis
+ITCS,6216,Introduction to Cognitive Science
+ITCS,6265,Advanced Topics in Data Mining
+ITCS,6322,Complex Adaptive Systems
+ITCS,6345,Modern Data Science Systems
+ITCS,6490,Industrial Internship
+ITCS,6500,Complex Adaptive Systems
+ITCS,6617,Computational Human Behavior Modeling
+ITCS,6880,Individual Study
+ITCS,6881,"Individual Study in AI, Robotics, and Gaming"
+ITCS,6882,Individual Study in Data Science
+ITCS,6883,"Individual Study in Software, Systems, and"
+ITCS,6991,Computer Science Thesis
+ITCS,8000,8999 - Computer Science Elective
+ITCS,8010,Topics in Computer Science
+ITCS,8050,Topics in Artificial Intelligence
+ITCS,8101,Natural Language Processing
+ITCS,8112,Software Systems Design and Implementation
+ITCS,8114,Algorithms and Data Structures
+ITCS,8115,Advanced Algorithms
+ITCS,8115,Advanced Topics in Algorithms and Data
+ITCS,8116,Optimization for Machine Learning
+ITCS,8120,Computer Graphics
+ITCS,8121,Data and Information Visualization
+ITCS,8124,Illustrative Visualization
+ITCS,8125,Virtual and Augmented Reality
+ITCS,8132,Modeling and Analysis of Communication
+ITCS,8134,Digital Image Processing
+ITCS,8141,Computer System and Architecture:
+ITCS,8144,Operating Systems Design
+ITCS,8145,Parallel Computing
+ITCS,8150,Artificial Intelligence
+ITCS,8150,Intelligent Systems
+ITCS,8151,Intelligent Robotics
+ITCS,8152,Robot Motion Planning
+ITCS,8155,Knowledge-Based Systems
+ITCS,8156,Machine Learning
+ITCS,8157,Visual Databases
+ITCS,8160,Database Systems
+ITCS,8161,Advanced Topics in Database Systems
+ITCS,8162,Data Mining
+ITCS,8162,Knowledge Discovery in Databases
+ITCS,8163,Data Warehousing
+ITCS,8165,Coding and Information Theory
+ITCS,8165,Information measures and their properties;
+ITCS,8166,Computer Communications and Networks
+ITCS,8167,Advanced Networking Protocols
+ITCS,8168,Wireless Communication Networks
+ITCS,8169,Computer Vision
+ITCS,8190,Cloud Computing for Data Analysis
+ITCS,8224,Biomedical Image Processing
+ITCS,8322,Complex Adaptive Systems
+ITIS,1301,Introduction to the Financial Services Industry
+ITIS,2110,IT Infrastructure I: Design and Practice
+ITIS,2300,Web-Based Application Development (3)
+ITIS,3105,Server-Side Applications and Data Management
+ITIS,3130,Human Computer Interaction
+ITIS,3130,Human-Centered Design
+ITIS,3130,Introduction to Human-Centered Computing
+ITIS,3130,Introduction to HumanCentered Computing
+ITIS,3135,Front-End Web Application Development
+ITIS,3140,User Experience Methods
+ITIS,3200,Introduction to Information Security and Privacy
+ITIS,3216,Introduction to Cognitive Science
+ITIS,3246,IT Infrastructure and Security
+ITIS,3261,Foundations of Cloud Computing
+ITIS,3300,"Software Requirements, Analysis and Testing"
+ITIS,3310,Software Architecture and Design
+ITIS,3320,Introduction to Software Testing and Assurance
+ITIS,4010,Topics in Software and Information Systems
+ITIS,4166,Backend Application
+ITIS,4166,Backend Application Development
+ITIS,4170,Advanced Client Applications
+ITIS,4180,Mobile Application
+ITIS,4180,Mobile Application Development
+ITIS,4214,Usable Security and
+ITIS,4214,Usable Security and Privacy
+ITIS,4221,Secure Programming
+ITIS,4221,Secure Programming and Penetration Testing
+ITIS,4246,Competitive Cyber
+ITIS,4246,Competitive Cyber Defense
+ITIS,4250,Computer Forensics
+ITIS,4260,Introduction to Security Analytics
+ITIS,4261,Introduction to Secured Cloud Computing
+ITIS,4310,Web Mining
+ITIS,4350,Design Prototyping
+ITIS,4350,Introduction to theory and approaches for rapid
+ITIS,4353,Social Technology Design
+ITIS,4355,Accessible Design and Implementation
+ITIS,4358,Physical Computing
+ITIS,4358,"Physical computing considers tangible,"
+ITIS,4360,Explores the intersection of artificial intelligence
+ITIS,4360,Human-Centered Artificial Intelligence
+ITIS,4390,Interaction Design
+ITIS,4390,Interaction Design Projects
+ITIS,4990,Undergraduate Research
+ITIS,5010,Topics in Software and Information Systems
+ITIS,5101,Foundations of Programming
+ITIS,5135,Web-Based Application Design and
+ITIS,5166,Backend Application Development
+ITIS,5166,Network-Based
+ITIS,5180,Mobile Application
+ITIS,5180,Mobile Application Development
+ITIS,5221,Secure Programming
+ITIS,5221,Secure Programming and Penetration Testing
+ITIS,5246,Competitive Cyber
+ITIS,5246,Competitive Cyber Defense
+ITIS,5250,Computer Forensics
+ITIS,5260,Introduction to Security Analytics
+ITIS,5261,Introduction to Secured Cloud Computing
+ITIS,5280,Advanced Mobile Application Development
+ITIS,5310,Web Mining
+ITIS,5331,Web-Based Mobile and IoT Firmware Security
+ITIS,5350,Design Prototyping
+ITIS,5350,Rapid Prototyping
+ITIS,5353,Social Technology Design
+ITIS,5355,Accessible Design and Implementation
+ITIS,5358,Physical Computing
+ITIS,5360,Human-Centered AI
+ITIS,5390,Interaction Design Projects
+ITIS,6010,Topics in Software and Information Systems
+ITIS,6011,Interaction Design
+ITIS,6110,Agent-Based Modeling
+ITIS,6110,"Discusses the definition of an agent-based model,"
+ITIS,6112,Software System Design and Implementation
+ITIS,6120,Applied Databases
+ITIS,6150,Software Assurance
+ITIS,6162,Knowledge Discovery in Databases
+ITIS,6163,Data Warehousing
+ITIS,6167,Network Security
+ITIS,6177,System Integration
+ITIS,6180,Foundations of Health Informatics
+ITIS,6188,Text Mining and Information Retrieval
+ITIS,6200,"Discusses objectives, formal models, and"
+ITIS,6200,Principles of Information Security and Privacy
+ITIS,6200,Principles of Information Security and Privacy (3)
+ITIS,6210,Access Control and Security Architecture
+ITIS,6214,Usable Security and Privacy
+ITIS,6216,Introduction to Cognitive Science
+ITIS,6220,Data Privacy
+ITIS,6230,Enterprise and Infrastructure Protection
+ITIS,6240,Applied Cryptography
+ITIS,6260,Quantum Computing
+ITIS,6268,Wireless Network Security
+ITIS,6270,"BlockChain, Cryptocurrency, and Distributed"
+ITIS,6300,Human-Centered Design
+ITIS,6318,Personalization and Recommender Systems
+ITIS,6320,Cloud Data Storage
+ITIS,6322,Complex Adaptive Systems
+ITIS,6326,Network Science
+ITIS,6328,Systems Dynamics
+ITIS,6330,Malware Analysis
+ITIS,6342,Information
+ITIS,6342,Information Technology Project Management
+ITIS,6362,"Information Technology Ethics, Policy, and"
+ITIS,6362,"Information Technology: Ethics, Policy, and"
+ITIS,6400,Human-Centered
+ITIS,6400,Human-Centered Design
+ITIS,6400,Principles of Human Computer Interaction
+ITIS,6420,Usable Security and
+ITIS,6498,IT Internship Project
+ITIS,6880,Individual Study
+ITIS,6991,Information Technology Thesis
+ITIS,6999,SFS Research
+ITIS,8010,Topics in Software and Information Systems
+ITIS,8110,Agent-Based Modeling
+ITIS,8110,"Discusses the definition of an agent-based model,"
+ITIS,8112,Software System Design and Implementation
+ITIS,8120,Applied Databases
+ITIS,8150,Software Assurance
+ITIS,8167,Network and Information Security
+ITIS,8180,Foundations of Health Informatics
+ITIS,8200,Principles of Information Security and Privacy
+ITIS,8210,Access Control and Security Architecture
+ITIS,8214,Usable Security and Privacy
+ITIS,8220,Data Privacy
+ITIS,8230,Enterprise and Infrastructure Protection
+ITIS,8240,Applied Cryptography
+ITIS,8260,Quantum Computing
+ITIS,8268,Wireless Network Security
+ITIS,8270,"BlockChain, Cryptocurrency, and Distributed"
+ITIS,8300,Human-Centered Design
+ITIS,8318,Personalization and Recommender Systems
+ITIS,8320,Cloud Data Storage
+ITIS,8322,Complex Adaptive Systems
+ITIS,8326,Network Science
+ITIS,8328,Systems Dynamics
+ITIS,8330,Malware Analysis
+ITIS,8350,Rapid Prototyping with HCI Design Patterns

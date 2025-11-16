@@ -1,0 +1,43 @@
+# Core web framework
+flask==3.0.0
+flask-cors==4.0.0
+
+# Database
+pymongo==4.6.0
+
+# Environment and configuration
+# fastmcp (via pydantic-ai) requires python-dotenv >= 1.1.0; allow any 1.x
+python-dotenv>=1.1.0,<2.0.0
+
+# PDF processing (pin to a wheel for Python 3.13 on Windows)
+# 1.26.6 provides a cp310-abi3 wheel that is compatible with CPython 3.13
+PyMuPDF==1.26.6
+
+# File handling
+# mcp (via pydantic-ai) requires python-multipart >= 0.0.9
+python-multipart>=0.0.9
+werkzeug==3.0.1
+
+# AI and ML (updated for compatibility)
+# Pin OpenAI to a recent 2.x to avoid backtracking and ensure modern deps
+openai==2.7.1
+# Force a prebuilt jiter wheel (Rust-based lib). Wheels exist for Python 3.13 on Windows from ~0.10.0+
+jiter>=0.10.0
+# NumPy 2.1+ provides prebuilt wheels for Python 3.13 on Windows; older versions may try to build from source
+numpy>=2.1.0
+
+# Data validation and parsing (updated for Python 3.13)
+pydantic>=2.6.0
+# Pin pydantic-ai to reduce resolver backtracking
+pydantic-ai==1.12.0
+
+# Date parsing
+python-dateutil==2.8.2
+
+# NOTES:
+# - PyMuPDF 1.23.8 doesn't work on Python 3.13 (needs Visual Studio)
+# - PyMuPDF >=1.24.0 has pre-compiled wheels for Python 3.13
+# - OpenAI needs to be >=1.54.3 for pydantic-ai compatibility
+# - Pydantic needs to be >=2.6.0 for Python 3.13 pre-compiled wheels
+# - NumPy needs to be >=2.1.0 for Python 3.13 support (prebuilt wheels)
+# - pydantic-ai >=1.11.1 includes all necessary dependencies (including griffe)
